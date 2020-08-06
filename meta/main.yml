@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: ome-devel@lists.openmicroscopy.org.uk
+  description: Minio S3 gateway with additional restricted users
+  company: Open Microscopy Environment
+  license: BSD
+  min_ansible_version: 2.6
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  role_name: minio_s3_gateway
+  galaxy_tags: []

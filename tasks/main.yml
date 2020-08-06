@@ -1,0 +1,67 @@
+---
+# tasks file for minio-s3-gateway
+
+# minio S3 gateway with custom users in front of an external S3 store
+# https://github.com/minio/minio/issues/8045
+
+- name: Install docker-py
+  become: true
+  yum:
+    name: docker-python
+    state: present
+
+- name: Create docker network
+  become: true
+  docker_network:
+    name: "{{ minio_s3_gateway_docker_network }}"
+
+# Etcd required for multiple users on the S3 gateway
+# https://github.com/minio/minio/blob/master/docs/sts/etcd.md
+- name: Minio etcd
+  become: true
+  docker_container:
+    image: "{{ minio_s3_gateway_etcd_image }}"
+    # Workaround problem with etcd docker directory permissions
+    # Breaking change going from 3.4.9 → 3.4.10
+    # https://github.com/etcd-io/etcd/pull/12145/files
+    command: >
+      sh -c 'chmod 0700 /etcd-data &&
+      /usr/local/bin/etcd
+      --name s1
+      --data-dir /etcd-data
+      --listen-client-urls http://0.0.0.0:2379
+      --advertise-client-urls http://0.0.0.0:2379
+      --listen-peer-urls http://0.0.0.0:2380
+      --initial-advertise-peer-urls http://0.0.0.0:2380
+      --initial-cluster s1=http://0.0.0.0:2380
+      --initial-cluster-token tkn
+      --initial-cluster-state new
+      '
+    name: minio-s3-gateway-etcd
+    networks:
+      - name: "{{ minio_s3_gateway_docker_network }}"
+    state: started
+    restart_policy: on-failure
+    volumes:
+      - etcd-data:/etcd-data
+
+# External S3 gateway
+# https://github.com/minio/minio/blob/master/docs/gateway/s3.md
+- name: Minio s3 gateway
+  become: true
+  docker_container:
+    image: "{{ minio_s3_gateway_minio_image }}"
+    command: gateway s3 {{ minio_s3_gateway_remote_endpoint }}
+    name: minio-s3-gateway-minio
+    env:
+      MINIO_ETCD_ENDPOINTS: http://minio-s3-gateway-etcd:2379
+      MINIO_ACCESS_KEY: "{{ minio_s3_gateway_access_key }}"
+      MINIO_SECRET_KEY: "{{ minio_s3_gateway_secret_key }}"
+    networks:
+      - name: "{{ minio_s3_gateway_docker_network }}"
+    ports:
+      - "9000:9000"
+    restart_policy: on-failure
+
+- include: minio-client.yml
+  when: minio_s3_gateway_install_client

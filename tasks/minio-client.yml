@@ -1,0 +1,47 @@
+---
+
+- name: Download minio client
+  become: true
+  get_url:
+    # Downloads the latest client, can't find a way to download a particular
+    # version
+    url: https://dl.min.io/client/mc/release/linux-amd64/mc
+    dest: /usr/local/bin/mc
+    force: false
+    mode: u=rwx,g=rx,o=rx
+
+- name: Copy minio-user.sh
+  become: true
+  template:
+    src: minio-user.sh
+    dest: /usr/local/bin/minio-user.sh
+    mode: u=rwx,g=rx,o=rx
+
+- name: Create config directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /etc/minio-s3-gateway
+    - /root/.mc
+
+- name: Copy policy-readwrite-subdir.json.template
+  become: true
+  copy:
+    src: policy-readwrite-subdir.json.template
+    dest: /etc/minio-s3-gateway/policy-readwrite-subdir.json.template
+
+- name: Create placeholder text file
+  become: true
+  copy:
+    content: "{{ minio_s3_gateway_placeholder_content }}"
+    dest: /etc/minio-s3-gateway/README.txt
+
+- name: Create root mc config
+  become: true
+  template:
+    src: mc-config-json.j2
+    dest: /root/.mc/config.json
+    backup: true
+    mode: u=r,g=,o=
