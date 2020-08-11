@@ -25,9 +25,9 @@ def add_user(host):
     username = ''.join(random.choice(ascii_lowercase) for i in range(8))
     out = host.check_output('minio-user.sh add %s', username)
     lines = out.splitlines()
-    assert lines[-2] == f'User: {username}'
-    assert lines[-1].startswith('Secret: ')
-    secret = lines[-1][8:]
+    assert lines[-2] == f'Access token: {username}'
+    assert lines[-1].startswith('Secret token: ')
+    secret = lines[-1][14:]
     assert len(secret) == 30
 
     configdir = f'/tmp/mc-{username}'

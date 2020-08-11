@@ -78,8 +78,8 @@ if [ "$COMMAND" = "add" ]; then
 
     mc $CONFIG_DIR cp /etc/minio-s3-gateway/README.txt "${ADMIN_CONNECTION}/${BUCKETNAME}/${USERNAME}/README.txt"
 
-    echo "User: $USERNAME"
-    echo "Secret: $SECRET"
+    echo "Access token: $USERNAME"
+    echo "Secret token: $SECRET"
 elif [ "$COMMAND" = "remove" ]; then
     mc $CONFIG_DIR admin policy remove "$ADMIN_CONNECTION" "$POLICY_NAME"
     mc $CONFIG_DIR admin user remove "$ADMIN_CONNECTION" "$USERNAME"
