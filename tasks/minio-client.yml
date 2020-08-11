@@ -47,3 +47,14 @@
     dest: /root/.mc/config.json
     backup: true
     mode: u=r,g=,o=
+
+# Needed so that it appears in the sudo PATH
+- name: Symlink minio client and script to /usr/bin
+  become: true
+  file:
+    path: /usr/bin/{{ item }}
+    src: /usr/local/bin/{{ item }}
+    state: link
+  loop:
+    - mc
+    - minio-user.sh

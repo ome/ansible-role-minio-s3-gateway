@@ -57,6 +57,7 @@
       MINIO_ETCD_ENDPOINTS: http://minio-s3-gateway-etcd:2379
       MINIO_ACCESS_KEY: "{{ minio_s3_gateway_access_key }}"
       MINIO_SECRET_KEY: "{{ minio_s3_gateway_secret_key }}"
+      MINIO_BROWSER: "off"
     networks:
       - name: "{{ minio_s3_gateway_docker_network }}"
     ports:
