@@ -42,12 +42,13 @@ Optional:
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables
-passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+    - hosts: s3gateway
       roles:
-         - { role: ansible-role-minio-s3-gateway, x: 42 }
+      - role: ome.docker
+      - role: ome.minio-s3-gateway
+        minio_s3_gateway_remote_endpoint: "https://s3.example.org"
+        minio_s3_gateway_access_key: remote-access
+        minio_s3_gateway_secret_key: remote-secret
 
 
 License
