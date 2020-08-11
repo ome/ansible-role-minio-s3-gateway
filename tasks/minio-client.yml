@@ -5,9 +5,11 @@
   get_url:
     # Downloads the latest client, can't find a way to download a particular
     # version
-    url: https://dl.min.io/client/mc/release/linux-amd64/mc
+    url:
+      https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2020-08-08T02-33-58Z
+    checksum:
+      sha256:81993b7cec9cbf2809d83c612bde833eb19dae16e128e3466227eee70f3293b7
     dest: /usr/local/bin/mc
-    force: false
     mode: u=rwx,g=rx,o=rx
 
 - name: Copy minio-user.sh

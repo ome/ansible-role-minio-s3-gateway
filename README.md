@@ -11,6 +11,9 @@ Multiple users or groups can be created in the gateway independent of the remote
 
 Includes a helper script `/usr/local/bin/minio-user.sh` to create and delete users (mostly for IDR submissions).
 
+Note this will automatically create a Minio client config file under `/root/.mc/config.json` that includes `minio_s3_gateway_access_key` and `minio_s3_gateway_secret_key`.
+Set `minio_s3_gateway_install_client` to `false` to disable this.
+
 
 Requirements
 ------------
@@ -32,7 +35,7 @@ Optional:
 - `minio_s3_gateway_minio_image`: Minio Docker image
 - `minio_s3_gateway_install_client`: Install the Minio client and helper scripts, default `true`
 - `minio_s3_gateway_bucket`: The bucket to use in the helper scripts if `minio_s3_gateway_install_client` is enabled, default `test`
-- `minio_s3_gateway_placeholder_content`: Content of a `README.txt` file that is copied to a new subdirectory if minio_s3_gateway_install_client is enabled
+- `minio_s3_gateway_placeholder_content`: Content of a `README.txt` file that is copied to a new subdirectory if `minio_s3_gateway_install_client` is enabled
 - `minio_s3_gateway_port`: Listen on this port, default `9000`
 
 
