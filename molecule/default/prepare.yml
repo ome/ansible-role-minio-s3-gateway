@@ -1,0 +1,41 @@
+---
+# Install a "remote" s3 server
+- name: Prepare
+  hosts: all
+
+  tasks:
+
+    - name: Make remote s3 test directory
+      become: true
+      file:
+        path: /srv/s3-remote-test
+        state: directory
+
+    - name: Download minio server binary
+      become: true
+      get_url:
+        url:
+          https://dl.min.io/server/minio/release/linux-amd64/archive/minio.RELEASE.2020-08-08T04-50-06Z
+        dest: /srv/s3-remote-test/minio
+        force: false
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Create systemd for remote-minio
+      become: true
+      copy:
+        content: |
+          [Unit]
+          Description=Minio remote S3 test server
+          [Service]
+          Environment=MINIO_ACCESS_KEY=remote-access
+          Environment=MINIO_SECRET_KEY=remote-secret
+          ExecStart=/srv/s3-remote-test/minio server --address :12345 \
+          /srv/s3-remote-test
+        dest: /etc/systemd/system/s3-remote-test.service
+
+    - name: Start remote s3 test server
+      become: true
+      systemd:
+        daemon_reload: true
+        name: s3-remote-test
+        state: started

@@ -11,6 +11,8 @@ minio_s3_gateway_bucket: test
 
 minio_s3_gateway_placeholder_content: "Hello!"
 
+minio_s3_gateway_port: 9000
+
 
 ######################################################################
 # Expert users only!

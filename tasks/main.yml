@@ -60,7 +60,7 @@
     networks:
       - name: "{{ minio_s3_gateway_docker_network }}"
     ports:
-      - "9000:9000"
+      - "{{ minio_s3_gateway_port }}:9000"
     restart_policy: on-failure
 
 - include: minio-client.yml

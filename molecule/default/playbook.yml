@@ -1,4 +1,11 @@
 ---
+# Install Docker and trigger all restart handlers
+- name: Converge
+  hosts: all
+  roles:
+    - role: ome.docker
+
+
 # Install this role
 - name: Converge
   hosts: all
@@ -16,25 +23,7 @@
 
   roles:
 
-    - role: ome.docker
-
     - role: ansible-role-minio-s3-gateway
       minio_s3_gateway_remote_endpoint: "http://{{ hostname_ip.stdout }}:12345"
       minio_s3_gateway_access_key: remote-access
       minio_s3_gateway_secret_key: remote-secret
-
-  tasks:
-
-    - name: remote s3 server
-      become: true
-      docker_container:
-        image: "{{ minio_s3_gateway_minio_image }}"
-        command: server /data
-        name: minio-s3-gateway-remote
-        env:
-          MINIO_ACCESS_KEY: remote-access
-          MINIO_SECRET_KEY: remote-secret
-        ports:
-          - "12345:9000"
-        volumes:
-          - /data/minio:/data
