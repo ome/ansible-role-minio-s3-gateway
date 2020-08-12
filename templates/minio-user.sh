@@ -12,8 +12,7 @@ USAGE: $(basename $0) connection-alias [add|remove] username
        $(basename $0) [add|remove] username
 
        connection-alias:
-         If omitted uses "minio-s3-gateway" from /root/.mc/ (requires root
-         access), otherwise it is taken from ~/.mc
+         If omitted uses "minio-s3-gateway"
 
        add:
          - create a user "username" with a random secret token
@@ -36,12 +35,10 @@ EOF
 fi
 
 if [ $# -eq 3 ]; then
-    CONFIG_DIR=
     ADMIN_CONNECTION="$1"
     COMMAND="$2"
     USERNAME="$3"
 else
-    CONFIG_DIR="--config-dir /root/.mc"
     ADMIN_CONNECTION=minio-s3-gateway
     COMMAND="$1"
     USERNAME="$2"
@@ -71,18 +68,18 @@ if [ "$COMMAND" = "add" ]; then
     POLICY_FILE=$(mktemp)
 
     sed -e "s/{BUCKETNAME}/$BUCKETNAME/g" -e "s/{USERNAME}/$USERNAME/g" "$POLICY_TEMPLATE" > "$POLICY_FILE"
-    mc $CONFIG_DIR admin policy add "$ADMIN_CONNECTION" "$POLICY_NAME" "$POLICY_FILE"
+    mc admin policy add "$ADMIN_CONNECTION" "$POLICY_NAME" "$POLICY_FILE"
 
-    mc $CONFIG_DIR admin user add "$ADMIN_CONNECTION" "$USERNAME" "$SECRET"
-    mc $CONFIG_DIR admin policy set "$ADMIN_CONNECTION" "$POLICY_NAME" user="$USERNAME"
+    mc admin user add "$ADMIN_CONNECTION" "$USERNAME" "$SECRET"
+    mc admin policy set "$ADMIN_CONNECTION" "$POLICY_NAME" user="$USERNAME"
 
-    mc $CONFIG_DIR cp /etc/minio-s3-gateway/README.txt "${ADMIN_CONNECTION}/${BUCKETNAME}/${USERNAME}/README.txt"
+    mc cp /etc/minio-s3-gateway/README.txt "${ADMIN_CONNECTION}/${BUCKETNAME}/${USERNAME}/README.txt"
 
     echo "Access token: $USERNAME"
     echo "Secret token: $SECRET"
 elif [ "$COMMAND" = "remove" ]; then
-    mc $CONFIG_DIR admin policy remove "$ADMIN_CONNECTION" "$POLICY_NAME"
-    mc $CONFIG_DIR admin user remove "$ADMIN_CONNECTION" "$USERNAME"
+    mc admin policy remove "$ADMIN_CONNECTION" "$POLICY_NAME"
+    mc admin user remove "$ADMIN_CONNECTION" "$USERNAME"
 else
     echo "ERROR: invalid command"
     exit 1
