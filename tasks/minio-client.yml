@@ -24,6 +24,7 @@
   file:
     path: "{{ item }}"
     state: directory
+    mode: 0755
   loop:
     - /etc/minio-s3-gateway
     - /root/.mc
@@ -33,12 +34,14 @@
   copy:
     src: policy-readwrite-subdir.json.template
     dest: /etc/minio-s3-gateway/policy-readwrite-subdir.json.template
+    mode: 0644
 
 - name: Create placeholder text file
   become: true
   copy:
     content: "{{ minio_s3_gateway_placeholder_content }}"
     dest: /etc/minio-s3-gateway/README.txt
+    mode: 0644
 
 - name: Create root mc config
   become: true
