@@ -9,5 +9,6 @@ galaxy_info:
     - name: EL
       versions:
         - 7
+  namespace: ome
   role_name: minio_s3_gateway
   galaxy_tags: []

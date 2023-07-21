@@ -23,7 +23,7 @@
 
   roles:
 
-    - role: ansible-role-minio-s3-gateway
+    - role: ome.minio_s3_gateway
       minio_s3_gateway_remote_endpoint: "http://{{ hostname_ip.stdout }}:12345"
       minio_s3_gateway_access_key: remote-access
       minio_s3_gateway_secret_key: remote-secret
