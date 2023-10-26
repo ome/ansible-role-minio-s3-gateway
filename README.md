@@ -2,7 +2,7 @@ Minio S3 Gateway
 ================
 
 [![Actions Status](https://github.com/ome/ansible-role-minio-s3-gateway/workflows/Molecule/badge.svg)](https://github.com/ome/ansible-role-minio-s3-gateway/actions)
-[![Ansible Role](https://img.shields.io/ansible/role/50197.svg)](https://galaxy.ansible.com/ome/minio_s3_gateway/)
+[![Ansible Role](https://img.shields.io/badge/ansible--galaxy-minio_s3_gateway-blue.svg)](https://galaxy.ansible.com/ui/standalone/roles/ome/minio_s3_gateway/)
 
 Minio S3 gateway with additional restricted users.
 
