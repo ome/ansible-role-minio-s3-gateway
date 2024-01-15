@@ -22,7 +22,7 @@ jobs:
     name: Test
     needs:
       - list-scenarios
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       # Keep running so we can see if other tests pass
       fail-fast: false
@@ -46,10 +46,17 @@ jobs:
     if: startsWith(github.ref, 'refs/tags')
     needs:
       - test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - name: galaxy
-        uses: robertdebock/galaxy-action@1.2.1
+      - uses: actions/checkout@v4
+      - name: Read the role name
+        id: role-name
+        run: |
+          name=$(grep 'role_name' meta/main.yml | sed -r 's/^[^:]*:(.*)$/\1/' | tr -d '[:space:]')  # noqa
+          echo "rolename=$name" >> "$GITHUB_OUTPUT"
+      - name: Publish to Galaxy
+        uses: ome/action-ansible-galaxy-publish@main
         with:
-          galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
-          git_branch: ${{  github.ref_name }}
+          galaxy-api-key: ${{ secrets.GALAXY_API_KEY }}
+          galaxy-version: ${{ github.ref_name }}
+          role-name: ${{ steps.role-name.outputs.rolename }}
