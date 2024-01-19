@@ -6,20 +6,21 @@
 
 - name: Install docker-py
   become: true
-  yum:
+  ansible.builtin.dnf:
+    update_cache: true
     name: docker-python
     state: present
 
 - name: Create docker network
   become: true
-  docker_network:
+  ansible.builtin.docker_network:
     name: "{{ minio_s3_gateway_docker_network }}"
 
 # Etcd required for multiple users on the S3 gateway
 # https://github.com/minio/minio/blob/master/docs/sts/etcd.md
 - name: Minio etcd
   become: true
-  docker_container:
+  ansible.builtin.docker_container:
     image: "{{ minio_s3_gateway_etcd_image }}"
     # Workaround problem with etcd docker directory permissions
     # Breaking change going from 3.4.9 → 3.4.10
@@ -49,7 +50,7 @@
 # https://github.com/minio/minio/blob/master/docs/gateway/s3.md
 - name: Minio s3 gateway
   become: true
-  docker_container:
+  ansible.builtin.docker_container:
     image: "{{ minio_s3_gateway_minio_image }}"
     command: gateway s3 {{ minio_s3_gateway_remote_endpoint }}
     name: minio-s3-gateway-minio
