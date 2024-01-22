@@ -4,11 +4,10 @@
 # minio S3 gateway with custom users in front of an external S3 store
 # https://github.com/minio/minio/issues/8045
 
-- name: Install docker-py
+- name: Install docker
   become: true
-  ansible.builtin.dnf:
-    update_cache: true
-    name: docker-python
+  ansible.builtin.pip:
+    name: docker
     state: present
 
 - name: Create docker network
