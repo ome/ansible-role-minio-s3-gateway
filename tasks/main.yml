@@ -8,6 +8,7 @@
   become: true
   ansible.builtin.pip:
     name: docker
+    version: "{{ docker_version }}"
     state: present
 
 - name: Create docker network

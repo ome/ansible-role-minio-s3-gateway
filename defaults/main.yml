@@ -13,6 +13,7 @@ minio_s3_gateway_placeholder_content: "Hello!"
 
 minio_s3_gateway_port: 9000
 
+docker_version: 7.0.0
 
 ######################################################################
 # Expert users only!
