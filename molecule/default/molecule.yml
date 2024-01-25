@@ -11,11 +11,17 @@ lint: |
     flake8
 platforms:
   - name: minio
-    image: centos/systemd:latest
-    privileged: true
+    image: eniocarboni/docker-rockylinux-systemd:9
+    image_version: latest
     command: /sbin/init
+    privileged: true
+    cgroupns_mode: host
+    tmpfs:
+      - /sys/fs/cgroup
     groups:
-      - docker_hosts
+      - extra_options
+       - docker_hosts
+
 provisioner:
   name: ansible
   lint:

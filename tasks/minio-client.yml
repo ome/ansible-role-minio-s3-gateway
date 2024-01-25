@@ -2,7 +2,7 @@
 
 - name: Download minio client
   become: true
-  get_url:
+  ansible.builtin.get_url:
     # Downloads the latest client, can't find a way to download a particular
     # version
     url:
@@ -14,14 +14,14 @@
 
 - name: Copy minio-user.sh
   become: true
-  template:
+  ansible.builtin.template:
     src: minio-user.sh
     dest: /usr/local/bin/minio-user.sh
     mode: u=rwx,g=rx,o=rx
 
 - name: Create config directories
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: 0755
@@ -31,21 +31,21 @@
 
 - name: Copy policy-readwrite-subdir.json.template
   become: true
-  copy:
+  ansible.builtin.copy:
     src: policy-readwrite-subdir.json.template
     dest: /etc/minio-s3-gateway/policy-readwrite-subdir.json.template
     mode: 0644
 
 - name: Create placeholder text file
   become: true
-  copy:
+  ansible.builtin.copy:
     content: "{{ minio_s3_gateway_placeholder_content }}"
     dest: /etc/minio-s3-gateway/README.txt
     mode: 0644
 
 - name: Create root mc config
   become: true
-  template:
+  ansible.builtin.template:
     src: mc-config-json.j2
     dest: /root/.mc/config.json
     backup: true
@@ -54,7 +54,7 @@
 # Needed so that it appears in the sudo PATH
 - name: Symlink minio client and script to /usr/bin
   become: true
-  file:
+  ansible.builtin.file:
     path: /usr/bin/{{ item }}
     src: /usr/local/bin/{{ item }}
     state: link

@@ -37,6 +37,7 @@ Optional:
 - `minio_s3_gateway_bucket`: The bucket to use in the helper scripts if `minio_s3_gateway_install_client` is enabled, default `test`
 - `minio_s3_gateway_placeholder_content`: Content of a `README.txt` file that is copied to a new subdirectory if `minio_s3_gateway_install_client` is enabled
 - `minio_s3_gateway_port`: Listen on this port, default `9000`
+- `docker_version`: The version of Python library for the Docker Engine API, default `7.0.0`
 
 
 Example Playbook
